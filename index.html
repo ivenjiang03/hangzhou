@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="2026年11月20日至22日杭州旅行路线、时间轴与高德导航">
+<title>杭州三天两晚 · 行程地图</title>
+<style>
+:root{color-scheme:light;--ink:#203b34;--muted:#53685e;--paper:#f6f4ea;--card:#fffef9;--line:#dbdfd3;--green:#195947;--gold:#f3e4bc;--route:#28765e}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:15px/1.65 system-ui,"Microsoft YaHei",sans-serif}
+button,a{touch-action:manipulation}button{font:inherit;cursor:pointer;color:inherit}a{color:#175847;text-underline-offset:3px}
+:focus-visible{outline:3px solid #ba7830;outline-offset:3px}[hidden]{display:none!important}
+.hero{background:#143e34;color:#fffdf3;border-bottom:4px solid #cfaa67}.wrap{max-width:1360px;margin:auto;padding-inline:clamp(16px,4vw,56px)}
+.hero .wrap{padding-top:34px;padding-bottom:30px}.hero p{margin:0;color:#e2eadd}.hero .date{font-size:13px;font-weight:700;letter-spacing:.1em;color:#eed9aa}
+h1,h2,h3,p{overflow-wrap:anywhere}h1{margin:6px 0 4px;font:750 clamp(34px,5vw,60px)/1.15 Georgia,"Songti SC",SimSun,serif;letter-spacing:.045em}
+h2{margin:0;font-size:clamp(21px,3vw,29px);line-height:1.28}h3{margin:0;font-size:19px;line-height:1.35}
+nav{margin:18px 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.tab{min-height:48px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:6px 4px;font-weight:750;line-height:1.3}
+.tab[aria-pressed=true]{background:var(--green);border-color:var(--green);color:white}
+.grid{display:grid;grid-template-columns: minmax(0,1.13fr) minmax(0,1fr);gap:24px;align-items:start}
+.map-panel{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0}
+.map-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 14px}.map-head strong{font-size:16px}
+.amap-popup{max-width:240px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px 10px;box-shadow:0 1px 6px #0002;font-size:13px}.amap-number{width:24px;height:24px;padding:0}.map-head button{border:1px solid var(--line);border-radius:8px;padding:5px 9px;background:var(--card);white-space:nowrap}
+.map-view{position:relative;height:clamp(330px,60vh,635px);background:#e8eee5;isolation:isolate}
+#amap,#diagram{position:absolute;inset:0;width:100%;height:100%}#diagram{background:#e8eee5;background-image:linear-gradient(#d8e3d980 1px,transparent 1px),linear-gradient(90deg,#d8e3d980 1px,transparent 1px);background-size:28px 28px}
+.map-foot{padding:8px 14px;font-size:12px;color:var(--muted)}.key{display:flex;gap:12px;flex-wrap:wrap}.key span{white-space:nowrap}.swatch{display:inline-block;width:16px;border-top:3px solid var(--c);vertical-align:middle;margin-right:5px}
+.pin{border:2px solid white;border-radius:50%;background:var(--c);color:white;text-align:center;font:bold 11px/20px system-ui;box-shadow:0 1px 4px #0005}
+.pin.selected{outline:3px solid #d9a750;z-index:1}.popup strong{display:block;margin-bottom:5px}
+.summary,.notice,.day-link,article,.sources{background:var(--card);border:1px solid var(--line);border-radius:12px}
+.summary,.notice,.sources{padding:15px 16px;margin:0 0 13px}.notice{background:#fcf1d7;border-color:#e6d4a6}
+.summary p,.notice p,.sources p,.day-link p{margin:5px 0 0}.muted{color:var(--muted);font-size:13px}
+.day-link{display:block;text-align:left;width:100%;margin:0 0 9px;padding:12px 14px;border-left:4px solid var(--c);color:var(--ink)}.day-link b{display:block;font-size:16px}.day-link p{font-size:14px}
+.intro{margin-bottom:12px}.intro p{margin:5px 0 0}
+.timeline{position:relative;display:grid;gap:9px;padding-left:11px}.timeline::before{content:"";position:absolute;top:18px;bottom:18px;left:0;width:2px;background:var(--line)}
+article{position:relative;padding:11px 13px}article::before{content:"";position:absolute;left:-16px;top:20px;width:8px;height:8px;background:var(--route);border:2px solid var(--paper);border-radius:50%}
+article.selected{border-color:var(--route);box-shadow:0 0 0 1px var(--route)}article p{margin:6px 0 0}.meta{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:750;color:var(--green);margin-bottom:4px}
+.badge{display:inline-block;background:#e7eee5;color:#2c5547;padding:0 7px;border-radius:15px}.badge.important{background:var(--gold);color:#66451d}.details{color:var(--muted);font-size:13px}
+.journey{margin-top:9px;padding:8px 10px;background:#f3f5ed;border-left:3px solid var(--route);border-radius:0 7px 7px 0;font-size:13px}
+.journey p{margin:3px 0 0}.journey p:first-child{margin:0}
+.journey-estimate,.journey-live{color:var(--muted)}.journey-live{font-size:12px}
+.journey-live[data-state="confirmed"]{color:var(--green)}
+.actions,.reference-links{display:flex;flex-wrap:wrap;gap:5px 10px;margin-top:8px}.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;border:1px solid var(--line);border-radius:7px;background:#f5f7f0;color:#195345;font-size:12px;padding:4px 8px;text-decoration:none}.actions a:first-child{background:#eaf1e7}
+.sources{margin-top:15px}.sources ul{padding-left:20px;margin:8px 0}.sources summary{font-weight:750;cursor:pointer}.bottom{padding-block:24px 32px}
+@media(max-width:850px){.grid{grid-template-columns:1fr;gap:16px}.map-panel{position:relative;top:auto}.map-view{height:clamp(250px,40vh,365px)}.hero .wrap{padding-top:25px;padding-bottom:23px}nav{margin:12px 0}}
+@media(max-width:380px){.map-head{padding-inline:9px}.tab{font-size:13px}.map-foot{padding-inline:9px}}
+@media print{.map-panel,nav,.actions{display:none}.grid{display:block}.hero{background:white;color:black}.hero p{color:black}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <p class="date">2026.11.20 周五 — 11.22 周日</p>
+  <h1>杭州三天两晚</h1>
+  <p>里西湖与灵隐 · 西湖经典步行线 · 青山湖与钱江新城</p>
+</div></header>
+<main class="wrap">
+  <nav id="tabs" aria-label="选择行程日期"></nav>
+  <div class="grid">
+    <section class="map-panel" id="map-panel" aria-label="行程地图">
+      <div class="map-head"><strong id="map-title">三日路线</strong><button id="fit" type="button">查看全线</button></div>
+      <div class="map-view">
+        <svg id="diagram" viewBox="0 0 600 325" role="img" aria-label="行程点位示意图"></svg>
+        <div id="amap" aria-label="高德行程地图" hidden></div>
+      </div>
+      <div class="map-foot"><div class="key" id="legend"></div><div id="map-status" role="status">正在加载高德地图。</div></div>
+    </section>
+    <div>
+      <section id="content" aria-label="行程时间轴"></section>
+      <details class="sources">
+        <summary>参考链接与信息出处</summary>
+        <p class="muted">两条原帖短链未能读取正文，路线按你摘录的景点重排。小红书网页搜索未返回可核验的同类笔记，以下保留原帖和对应站内搜索入口。餐馆链接用于出发前核对营业和排队。</p>
+        <ul>
+          <li><a href="https://xhslink.cn/o/2IQlY3SzuAc">杭州淡人72h · 你分享的原帖</a></li>
+          <li><a href="https://xhslink.cn/o/rmwOgma7Gz">杭州3天2夜 · 你分享的原帖</a></li>
+          <li id="xhs-topics"></li>
+          <li><a href="https://www.lingyinsi.com/detail_57_19455.html">灵隐寺官方 · 飞来峰预约须知</a>、<a href="https://ori.hangzhou.com.cn/ornews/content/2026-09/07/content_9301062.htm">2026 西湖秋季周末交通</a></li>
+          <li><a href="https://you.ctrip.com/sight/hangzhou14/25577.html">郭庄开放与票务</a>、<a href="https://you.ctrip.com/sight/hangzhou14/110280.html">法喜寺开放与票务</a>、<a href="https://m.hz.bendibao.com/tour/93197.shtm?src=amap">雷峰塔冬季时段</a></li>
+          <li><a href="https://www.amap.com/place/B0HKH5CX4Q">高德 · 青山湖景区游客中心</a>、<a href="https://you.ctrip.com/sight/hangzhou14/124907821.html">水上森林票务</a></li>
+          <li><a href="https://lbs.amap.com/api/javascript-api-v2/guide/services/navigation">高德开放平台 · 路线规划</a></li>
+          <li><a href="https://www.dianping.com/shop/56668608/photos">大众点评 · 皇饭儿</a>、<a href="https://www.amap.com/place/B0H0FZKN6I">高德 · 杭小厨湖滨店</a>、<a href="https://www.amap.com/place/B023B149XN">高德 · 金牌外婆家杭州万象城店</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+  <footer class="bottom muted">时间为行程估算，票价按成人参考。地图标注为景点或入口附近。电子身份证适用范围以景区核验要求为准，建议带实体证件。</footer>
+</main>
+<script>
+const hotel = {name:'未蓝酒店', label:'未蓝酒店 · 城站', lat:30.242975, lng:120.180284, query:'杭州未蓝酒店 江城路889号 香榭商务大厦西门', addr:'上城区江城路889号香榭商务大厦西门1楼，按你提供的地址从城站 A1 口步行约120米。'};
+const east = {name:'杭州东站', label:'杭州东站', lat:30.290846, lng:120.212605};
+const huanglong = {label:'黄龙体育中心地铁站 D 口',lat:30.267849,lng:120.128511};
+const fengqi = {label:'凤起路地铁站',lat:30.263779,lng:120.162887};
+const lingyin = {label:'灵隐飞来峰景区入口',lat:30.240608,lng:120.103381};
+const spot = (time,name,lat,lng,tag,mode,desc,detail='',extra={}) =>
+  ({time,name,label:name,lat,lng,tag,mode,desc,detail,...extra});
+const days = [
+{
+  tab:'11.20 周五', title:'里西湖、灵隐与清河坊', color:'#21674d',
+  pace:'地铁 1／3 号线接步行 · 全走约 13–16 公里，可在允许路段骑共享单车',
+  summary:'杨公堤 → 茅家埠 → 郭庄 → 灵隐寺 → 法喜寺 → 河坊街 → 南宋御街',
+  alert:'现在可查 11/20 下午的灵隐免费实名预约。最迟提前一天办好，在微信或支付宝搜「杭州灵隐飞来峰」。当日无常规预约和现场登记。目标约 14:10 到入口。灵隐约不到时先看线上候补，晚于 15:00 才能入园时，先去法喜寺再在预约范围内进灵隐，并给灵隐 17:00 前核验留足时间。',
+  points:[
+    {...east,time:'09:53–10:12',tag:'到达',desc:'杭州东站下车，跟随地铁指引换乘。预留站内出站、安检和等车时间。'},
+    {...hotel,time:'10:12–10:55',tag:'住宿',mode:'metro',desc:'火车东站坐地铁 1 号线（湘湖方向）到城站，A1 口去酒店寄存。把办理入住放到夜游结束后。',detail:'出发前问前台能否先寄存及周日退房后取件。'},
+    spot('10:55–11:50','杨公堤 · 北段',30.252028,120.132343,'湖西步行','walk','城站坐地铁 1 号线到武林广场，换 3 号线到黄龙体育中心。从 D 口步行约 25–30 分钟，到曲院风荷北门附近进入杨公堤。','有共享单车时可在准骑的市政道路骑约 10–15 分钟，按电子围栏还车，再步行上堤。',{label:'曲院风荷北门 · 杨公堤',routeFrom:huanglong,metro:true,bike:true}),
+    spot('11:50–12:30','茅家埠',30.238325,120.125404,'必打卡','walk','从杨公堤北段沿人行道向南，循指引进入茅家埠，走一段湿地木栈道和水边村落。挑一段临水支路即回主路，朝杨公堤、卧龙桥走。','按景区入口、过街点和现场指示走。',{xhs:'杭州 茅家埠 杨公堤 郭庄 步行路线'}),
+    spot('12:30–13:10','郭庄',30.243918,120.132267,'必打卡','walk','杨公堤28号、卧龙桥旁进园，重点看临湖楼厅、池塘和取景窗。茅家埠到门口预留约 15–20 分钟，园内约 25 分钟。','常规成人票约 ¥10，出发前结合临时公告复核。'),
+    {time:'13:10–13:25',name:'午餐 · 郭庄至灵隐转场前',tag:'餐饮',desc:'这一顿优先快速解决。酒店出发前可备饭团或三明治，或在郭庄附近买小面、馄饨。这段留约 15 分钟，简餐可以提前备好。',detail:'正餐留给清河坊，赶时间直接带餐到灵隐景区入口外吃。'},
+    spot('13:25–15:05','灵隐飞来峰 · 灵隐寺',lingyin.lat,lingyin.lng,'必打卡','walk','从郭庄沿杨公堤向北转灵隐路，走公开人行道约 40–50 分钟。约 14:10 从景区入口核验，先看就近石刻，再进灵隐寺看天王殿与大雄宝殿。','免费，通常至少提前一天实名预约。带预约证件。返程紧时把飞来峰沿线停留压短。',{label:'灵隐飞来峰景区入口',query:'杭州 灵隐飞来峰景区 正门',xhs:'杭州 灵隐寺 法喜寺 天竺路 半日游',source:['灵隐寺预约说明','https://www.lingyinsi.com/detail_57_19455.html']}),
+    spot('15:05–16:25','上天竺法喜讲寺',30.228768,120.098777,'必打卡','walk','从灵隐出口沿天竺路步行约 25–35 分钟，目标 15:30–15:40 到。留约 45–55 分钟看黄墙、院落与层叠屋檐。','成人票常见约 ¥10。独立票务，出行当天以寺院公告为准。迟到时优先保住入场，拍摄和御守排队都可压缩。',{query:'杭州 上天竺法喜讲寺'}),
+    spot('16:25–18:30','河坊街 · 清河坊',30.240073,120.168923,'夜游','walk','沿天竺路步行回灵隐，再沿灵隐路、玉古路到黄龙体育中心站。从法喜寺到地铁全程步行约 75–90 分钟，有车且路段准骑时可从灵隐骑到地铁站。坐 3 号线到武林广场，换 1 号线（湘湖方向）到定安路，步行约 10 分钟到河坊街。','按约 2 小时预留转场。到后从吴山方向向东逛老街，葱包桧和定胜糕可各买小份。若到得晚，先吃饭再逛街。展馆先查闭馆时间。',{routeTo:huanglong,metro:true,bike:true,bikeFrom:lingyin}),
+    {time:'18:30–19:25',name:'晚餐 · 皇饭儿（河坊街店）',tag:'餐饮',desc:'想吃杭帮菜，可看皇饭儿·王润兴酒楼的当日菜单，优先东坡肉、干炸响铃或酱鸭。少人用餐可选一荤一素。排队超过约 20 分钟就沿街换一家面馆，点片儿川或虾爆鳝面。',detail:'计划预算面馆 ¥25–50/人，杭帮菜约 ¥70–120/人，按现价。',query:'杭州 皇饭儿 王润兴酒楼 河坊街店',source:['大众点评店铺','https://www.dianping.com/shop/56668608/photos']},
+    spot('19:25–20:40','南宋御街 · 中山中路',30.242479,120.170779,'夜游','walk','从河坊街与中山中路交会处向北走 30–50 分钟，看看老字号门面和街道夜景。逛完从惠民路一带步行回城站酒店，估 15–25 分钟。','想先拍鼓楼可由交会处稍向南绕，再折回往北。',{xhs:'杭州 河坊街 南宋御街 城站 晚上 小吃'})
+  ]
+},
+{
+  tab:'11.21 周六',title:'西湖经典步行线与湖滨',color:'#98612b',
+  pace:'约 8–10 公里步行 · 苏堤由北向南，抵达长桥后再去湖滨',
+  summary:'断桥残雪 → 白堤 → 孤山 → 苏堤 → 花港观鱼 → 雷峰塔 → 长桥 → in77 → 湖滨88 → 工联CC',
+  alert:'早上从城站坐地铁到凤起路，步行到断桥。湖畔全程步行，长桥沿南山路走到湖滨，晚间从龙翔桥坐地铁回城站。',
+  points:[
+    {...hotel,time:'07:35–08:20',tag:'出发',desc:'早餐后坐 1 号线往火车东站一侧，到凤起路站，导航步行到北山街断桥东端约 15–25 分钟。'},
+    spot('08:20–08:45','断桥残雪',30.258151,120.151347,'必打卡','walk','从北山街上桥，先看桥头与里西湖视角，再向西走白堤。周六尽量 09:00 前过断桥。','',{routeFrom:fengqi,metro:true}),
+    spot('08:45–09:25','白堤',30.255701,120.149189,'湖畔步行','walk','沿堤往孤山方向，经锦带桥，到平湖秋月停一停。白堤约 1 公里，拍照加步行预留 30–40 分钟。'),
+    spot('09:25–10:35','孤山',30.251897,120.142752,'必打卡','walk','走平湖秋月、孤山沿湖一线，经西泠桥出去。想看西泠印社可留 15–20 分钟，视开放与客流决定。','11:00 前沿北山街走到岳庙对面的苏堤北口。',{xhs:'杭州 西湖 断桥 白堤 孤山 苏堤 徒步路线'}),
+    {time:'10:35–11:15',name:'早午餐 · 岳庙或北山街',tag:'餐饮',desc:'在苏堤北口前解决午餐，或买便当随身带。可选片儿川、馄饨、葱包桧一类快餐。多人想坐下吃杭帮菜，可把楼外楼（孤山路30号）作为可选，早开餐、等位短才进。',detail:'若进店使苏堤出发推迟至 11:45 以后，花港改走红鱼池短线。',query:'杭州 岳王庙 北山街 面馆'},
+    spot('11:15–12:45','苏堤 · 北口至南端',30.251448,120.135764,'必打卡','walk','从北山街岳庙对面的北端入堤，朝南跨六桥，尽头到映波桥和花港观鱼。纯步行约 2.8 公里，含拍照安排 75–90 分钟。','有风时带外套，沿堤补给有限，午餐后备好水。',{label:'苏堤北口'}),
+    spot('12:45–13:45','花港观鱼',30.230702,120.140186,'必打卡','walk','从苏堤一侧进园，重点走红鱼池、湖边和林荫小道。向苏堤南端、南山路方向出园，接雷峰塔。','进园前核对东侧入口，避免从杨公堤西门绕一圈。'),
+    spot('14:00–15:30','雷峰塔',30.230934,120.148849,'必打卡','walk','沿南山路到景区入口，先看旧塔基，再登塔看湖面与苏堤。步行和排队给到约 90 分钟，电梯人多就缩短楼层停留。','冬季常规开放 08:00–17:30，17:00 停止入园，成人约 ¥40。',{source:['冬季开放时段','https://m.hz.bendibao.com/tour/93197.shtm?src=amap']}),
+    spot('15:45–17:00','长桥公园',30.232963,120.155111,'必打卡','walk','南山路向东走约 10–15 分钟，在水边往西拍雷峰塔。晴天可以等近 17:00 的夕照，阴天停留 20–30 分钟后提前去湖滨。','这里是拍塔的位置。湖畔湿滑时走铺装路。'),
+    spot('17:00–18:55','湖滨银泰 in77',30.252830,120.163749,'夜游','walk','长桥沿南山路向北走到湖滨约 35–45 分钟。途中可在沿湖休息点稍作停留。in77 可从延安路258号或湖滨步行街一侧进入。','把晚餐和逛 in77 合在这一站。杭小厨湖滨店（吴山路158-1号）可看龙井虾仁、东坡肉或小份杭帮菜。等位长就选 in77 地下餐饮，计划 ¥45–110/人。',{xhs:'杭州 in77 湖滨88 工联CC 湖滨逛街 美食',source:['杭小厨湖滨店位置','https://www.amap.com/place/B0H0FZKN6I']}),
+    spot('19:00–19:35','湖滨88',30.254710,120.162450,'夜游','walk','步行到平海路124号。按感兴趣的店铺逛一两层，或在湖滨街区找甜品和饮品休息。'),
+    spot('19:40–20:30','工联CC',30.254835,120.164644,'夜游','walk','步行几分钟到延安路292号，先逛想去的商户。结束从龙翔桥地铁站坐 1 号线（湘湖方向）回城站，步行到酒店。','',{query:'杭州 工联CC 延安路292号'})
+  ]
+},
+{
+  tab:'11.22 周日',title:'青山湖、杭州万象城与返程',color:'#386289',
+  pace:'临安往返各预留约 1.5–2 小时 · 以 19:30 杭州东站发车倒排',
+  summary:'城站 → 八百里 → 青山湖水上森林 → 酒店取行李 → 杭州万象城 → 杭州东站',
+  alert:'水上森林安排木栈道，11:15 从景区往车站走，11:50 左右搭返城地铁。遇大雨时看景区开放公告，绿道开放可走近入口短段，核心区与绿道均关闭时改室内。17:15 从万象城出发，目标 18:00 到东站。',
+  points:[
+    {...hotel,time:'06:55–07:15',tag:'退房寄存',desc:'早餐带走，退房后把行李寄到前台。07:15 进城站地铁，身上只带证件、小包和雨具。'},
+    spot('07:15–09:00','八百里地铁站 · C1 口',30.260992,119.776595,'轨道交通','metro','城站坐 5 号线往绿汀路一侧，到绿汀路，换 16 号线（九州街方向）到八百里站，从 C1 出站。车程含等候、换乘估 90–105 分钟。','从 C1 口按下一张卡的步行导航去游客中心，预留约 25–35 分钟。',{query:'杭州 八百里地铁站 C1口'}),
+    spot('09:25–11:15','青山湖水上森林',30.257190,119.765621,'必打卡','walk','从八百里站 C1 口向水上森林方向步行，经云安路到青山湖景区游客中心，再按指引去木栈道检票口。沿栈道看池杉、水面倒影、桥和观景台，留约 1.5 小时。','核心区常见成人票约 ¥40。船、皮划艇另收费且受天气和排队影响，碰上随到随玩也要守住 11:15 离场。公园电话 0571-63716181。',{label:'青山湖景区游客中心',xhs:'临安 青山湖水上森林 八百里 C1 木栈道 11月',source:['高德游客中心位置','https://www.amap.com/place/B0HKH5CX4Q']}),
+    spot('11:15–11:50','八百里站 · 返城',30.260992,119.776595,'返城','walk','按来路步行约 25–35 分钟回八百里站 C1 口，从这里上 16 号线往绿汀路。','需迅速决定时以 11:50 前上返城地铁为目标。',{label:'八百里地铁站'}),
+    {...hotel,time:'11:50–13:40',tag:'取行李',mode:'metro',desc:'16 号线到绿汀路，转 5 号线（姑娘桥方向）回城站，再去前台取行李。若比计划晚 30 分钟，午餐直接到万象城，压缩购物时间。'},
+    spot('13:40–17:15','杭州万象城',30.251753,120.215513,'购物及午餐','metro','城站坐 1 号线（湘湖方向）到近江，换 4 号线（池华街方向）到江锦路，B3 口按商场指引走。步行和换乘合计约 30–45 分钟。15:00 前后吃完饭，余下时间逛感兴趣的楼层。','午餐可选金牌外婆家（杭州万象城店），看茶香鸡、东坡肉和当日小份菜。也可选简餐，预估 ¥40–110/人。行李寄存问服务台，17:00 开始收尾。',{source:['金牌外婆家万象城店位置','https://www.amap.com/place/B023B149XN']}),
+    {...east,time:'17:15–19:30',tag:'返程硬时点',mode:'metro',desc:'17:15 从万象城离开，江锦路坐 4 号线（池华街方向）直达「火车东站」。优先从站内铁路指引去检票口，目标 18:00 到杭州东站，19:30 发车。',detail:'17:30 作为最晚离开万象城的预案。简餐、洗手间和找检票口放到进站后的余量内。'}
+  ]
+}];
+</script>
+<script>
+const tabs = document.getElementById('tabs');
+const content = document.getElementById('content');
+const mapPanel = document.getElementById('map-panel');
+const amapNode = document.getElementById('amap');
+const diagram = document.getElementById('diagram');
+const mapStatus = document.getElementById('map-status');
+const legend = document.getElementById('legend');
+const mapTitle = document.getElementById('map-title');
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+const isAndroid = /Android/i.test(navigator.userAgent);
+const travelModes = {metro:'地铁',walk:'步行',ride:'骑行'};
+const topics = [
+  ['里西湖短线','杭州 杨公堤 茅家埠 郭庄 徒步'],
+  ['西湖经典线','杭州 断桥 孤山 苏堤 雷峰塔 长桥 秋天'],
+  ['临安水上森林','临安 青山湖 水上森林 八百里 木栈道 11月']
+];
+let current = -1;
+let activePoint = null;
+const amapMarkers = new Map();
+let amapMap;
+let amapPopup;
+let amapOverlays = [];
+const routeHint = '虚线表示停靠顺序，实际路线请打开高德导航。';
+
+const esc = (s) => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const external = (text,url) => '<a target="_blank" rel="noopener noreferrer" href="'+esc(url)+'">'+esc(text)+'</a>';
+const xhs = (query) => 'https://www.xiaohongshu.com/search_result?'+new URLSearchParams({keyword:query});
+const hasPin = (p) => Number.isFinite(p.lat) && Number.isFinite(p.lng);
+const coord = (p) => [p.lng,p.lat,p.label || p.name].join(',');
+function routeUrl({from,to,mode}){
+  if(isIOS || isAndroid){
+    const params = new URLSearchParams({
+      sourceApplication:'hangzhou-trip',dlat:to.lat,dlon:to.lng,dname:to.label || to.name,
+      dev:'0',t:{metro:'1',walk:'2',ride:'3'}[mode],m:mode==='metro'?'7':'0'
+    });
+    if(from){
+      params.set('slat',from.lat);
+      params.set('slon',from.lng);
+      params.set('sname',from.label || from.name);
+    }
+    return (isIOS ? 'iosamap://path?' : 'amapuri://route/plan/?')+params;
+  }
+  const params = new URLSearchParams({
+    from:from ? coord(from) : '',to:coord(to),mode:mode==='metro'?'bus':mode,
+    coordinate:'gaode',src:'hangzhou-trip'
+  });
+  return 'https://uri.amap.com/navigation?'+params;
+}
+
+function transportLinks(queries){
+  return queries.map(query=>{
+    const label = '高德导航 · '+travelModes[query.mode];
+    const destination = query.to.label || query.to.name;
+    const repeatedMode = queries.filter(other=>other.mode===query.mode).length>1;
+    const text = repeatedMode ? label+'到'+destination : label;
+    return '<a href="'+esc(routeUrl(query))+'" aria-label="'+esc(label+'到'+destination)+'">'+esc(text)+'</a>';
+  });
+}
+const pinPoints = (index) => days[index].points
+  .map((point,i)=>({...point,key:index+'-'+i,index:i}))
+  .filter(hasPin)
+  .map((point,i)=>({...point,number:i+1}));
+const [friday,saturday,sunday] = days.map(day=>day.points);
+const dingan = {label:'定安路地铁站',lat:30.245954,lng:120.167751};
+const cityStation = {label:'城站地铁站 A1 口',lat:30.243705,lng:120.181327};
+const suSouth = {label:'苏堤南端 · 映波桥一带',lat:30.23102,lng:120.14304};
+const wangrunxing = {label:'皇饭儿 · 王润兴酒楼',lat:30.240169,lng:120.170794};
+const walk = (from,to) => ({mode:'walk',from,to});
+const bike = (from,to) => ({mode:'ride',from,to});
+const rail = (from,to) => ({mode:'metro',from,to});
+const leg = (name,estimate,eta,...queries) => ({name,estimate,eta,queries});
+
+// Arrival windows include the itinerary's transfer buffer. API times describe only the queried legs.
+const journeys = [
+  [
+    leg('下车 → 火车东站地铁进站','站内步行与安检约 15–20 分钟','10:12 左右进地铁'),
+    leg('火车东站 ① → 城站 A1 口 → 未蓝酒店','地铁与站内步行约 30–40 分钟 · 出 A1 后约 120 米','10:45–10:55 到酒店',rail(east,hotel)),
+    leg('城站 ① → 武林广场换 ③ → 黄龙体育中心 D 口 → 杨公堤','全程约 45–55 分钟 · 末段步行约 1.8–2.2 公里 / 25–30 分钟','11:40–11:50 到杨公堤',
+      rail(hotel,huanglong),walk(huanglong,friday[2]),bike(huanglong,friday[2])),
+    leg('杨公堤北段 → 茅家埠湿地入口及木栈道','步行约 1.8–2.2 公里 / 25–35 分钟','12:15–12:25 到茅家埠',walk(friday[2],friday[3])),
+    leg('茅家埠 → 杨公堤卧龙桥旁 → 郭庄','步行约 1.0–1.3 公里 / 15–20 分钟','12:45–12:50 到园门',walk(friday[3],friday[4])),
+    leg('郭庄附近就餐','如自带简餐，可在离园后安排约 15 分钟','13:10 左右开始午餐'),
+    leg('郭庄 → 杨公堤 → 灵隐路 → 飞来峰入口','步行约 3.1–3.7 公里 / 40–50 分钟','14:05–14:15 到核验入口',walk(friday[4],friday[6])),
+    leg('灵隐出口 → 天竺路 → 法喜寺','步行约 1.7–2.3 公里 / 25–35 分钟','15:30–15:40 到法喜寺',walk(friday[6],friday[7])),
+    leg('法喜寺 → 天竺路、灵隐路、玉古路 → 黄龙体育中心 ③ → 武林广场换 ① → 定安路 → 清河坊','全程约 100–125 分钟 · 到地铁站步行约 5.2–6.2 公里 / 75–90 分钟；定安路出站再走约 10 分钟','18:05–18:30 到河坊街',
+      walk(friday[7],huanglong),rail(huanglong,dingan),walk(dingan,friday[8]),bike(lingyin,huanglong)),
+    leg('河坊街西段 → 皇饭儿（王润兴酒楼）','沿河坊街步行约 200 米 / 3–5 分钟','18:30 左右到餐厅',walk(friday[8],wangrunxing)),
+    leg('皇饭儿 → 南宋御街；游览后经惠民路方向回酒店','到交会处约 2–5 分钟 · 游览结束后再步行约 1.2–1.6 公里 / 15–25 分钟','19:25–19:30 到御街，约 20:55–21:05 到酒店',
+      walk(wangrunxing,friday[10]),walk(friday[10],hotel))
+  ],
+  [
+    leg('酒店 → 城站 A1 口','按住宿地址步行约 120 米 / 2–4 分钟','07:35 左右出发',walk(hotel,cityStation)),
+    leg('城站 ① → 凤起路 → 北山街断桥东端','全程约 30–45 分钟 · 出站步行约 1.2–1.6 公里 / 15–25 分钟','08:10–08:20 到断桥',
+      rail(hotel,fengqi),walk(fengqi,saturday[1])),
+    leg('断桥 → 锦带桥一带（白堤中段）','步行约 350–500 米 / 5–8 分钟；拍照另计','08:50–08:55 到白堤中段',walk(saturday[1],saturday[2])),
+    leg('白堤中段 → 平湖秋月 → 孤山','步行约 0.7–1.0 公里 / 10–15 分钟','09:25–09:40 到孤山沿湖段',walk(saturday[2],saturday[3])),
+    leg('孤山 → 西泠桥 → 岳庙／北山街午餐区','按就餐点安排约 0.7–1.2 公里 / 10–20 分钟','10:35–10:55 到午餐区'),
+    leg('岳庙附近 → 苏堤北口 → 六桥 → 苏堤南端','苏堤主线约 2.8 公里 · 一般连续步行约 40–50 分钟，含停留预留 75–90 分钟','11:15 到北口，12:30–12:45 到南端',walk(saturday[5],suSouth)),
+    leg('苏堤南端 → 花港观鱼苏堤侧入口／红鱼池','短接约 300–500 米 / 5–10 分钟；园内游览另计','12:45–12:55 进园',walk(suSouth,saturday[6])),
+    leg('花港观鱼苏堤侧 → 南山路 → 雷峰塔入口','步行约 1.0–1.3 公里 / 15–20 分钟','14:00–14:05 到雷峰塔入口',walk(saturday[6],saturday[7])),
+    leg('雷峰塔 → 南山路 → 长桥公园','步行约 0.7–1.0 公里 / 10–15 分钟','15:40–15:45 到长桥',walk(saturday[7],saturday[8])),
+    leg('长桥 → 南山路 → 湖滨步行街 → in77','步行约 2.5–3.0 公里 / 35–45 分钟','17:35–17:45 到 in77',walk(saturday[8],saturday[9])),
+    leg('in77 → 平海路湖滨88','步行约 250–400 米 / 4–7 分钟','19:00 左右到湖滨88',walk(saturday[9],saturday[10])),
+    leg('湖滨88 → 工联CC；游览后龙翔桥 ① → 城站 A1 → 酒店','商场间步行约 250–350 米 / 4–6 分钟 · 回酒店约 15–25 分钟','19:40 左右到工联CC，约 20:45–20:55 到酒店',
+      walk(saturday[10],saturday[11]),rail(saturday[11],hotel))
+  ],
+  [
+    leg('酒店 → 城站 A1 口','按住宿地址步行约 120 米 / 2–4 分钟','07:15 左右进站',walk(hotel,cityStation)),
+    leg('城站 ⑤ → 绿汀路换 ⑯ → 八百里 C1 口','含等候、换乘和出站约 90–105 分钟','08:45–09:00 到 C1 口',rail(hotel,sunday[1])),
+    leg('八百里 C1 口 → 云安路 → 青山湖游客中心','按规划步行约 1.6–2.2 公里 / 25–35 分钟','09:25–09:35 到游客中心',walk(sunday[1],sunday[2])),
+    leg('青山湖游客中心 → 云安路 → 八百里 C1 口','步行约 1.6–2.2 公里 / 25–35 分钟','11:40–11:50 到 C1 口',walk(sunday[2],sunday[3])),
+    leg('八百里 ⑯ → 绿汀路换 ⑤ → 城站 A1 → 酒店','含等候、换乘与取行李约 95–110 分钟','13:25–13:40 到酒店取行李',rail(sunday[3],hotel)),
+    leg('城站 ① → 近江换 ④ → 江锦路 B3 → 杭州万象城','步行和换乘合计约 30–45 分钟','14:10–14:25 到万象城',rail(hotel,sunday[5])),
+    leg('万象城 → 江锦路 ④ → 火车东站 → 铁路进站口','含等候和站内步行约 30–45 分钟','17:45–18:00 到杭州东站，19:30 发车',rail(sunday[5],east))
+  ]
+];
+const routeChecks = new Map();
+let routePlugins;
+let routeUnavailable = false;
+
+const groups = () => current<0 ? days.map((_,i)=>i) : [current];
+
+function overview(){
+  return '<section class="intro"><h2>三天怎么走</h2><p>清单上的景点和商场都已排入。周五两寺受预约和闭门时间影响，周日上午只走青山湖水上森林短线。</p></section>'+
+    '<section class="notice"><strong>出发前先处理这三件事</strong><p>约 11/20 下午灵隐飞来峰。问酒店能否提前寄存及退房后取行李。11/22 出发前查青山湖是否开园。</p></section>'+
+    '<section class="summary"><strong>'+esc(hotel.name)+'</strong><p>'+esc(hotel.addr)+'</p><div class="actions">'+transportLinks([walk(null,hotel)]).join('')+'</div></section>'+
+    days.map((d,i)=>'<button class="day-link" type="button" data-day="'+i+'" style="--c:'+d.color+'"><b>'+d.tab+' · '+esc(d.title)+'</b><p>'+esc(d.summary)+'</p></button>').join('')+
+    '<section class="summary"><strong>餐饮与换乘</strong><p>第一天午餐用快餐腾出寺院时间，晚上在清河坊吃杭帮菜。第二天在苏堤北口前补给，晚餐放湖滨。第三天午餐到万象城解决。三天以地铁和步行为主。周五部分市政道路可按现场标志选骑单车，按电子围栏还车。地铁进站可准备杭州地铁乘车码。</p></section>';
+}
+
+function routeSummary(day,index){
+  const item = journeys[day][index];
+  const key = day+'-'+index;
+  return '<div class="journey"><p><strong>'+esc(item.name)+'</strong></p>'+
+    '<p class="journey-estimate">行程估算 · '+esc(item.estimate)+'</p>'+
+    '<p class="journey-estimate">预计 · '+esc(item.eta)+'</p>'+
+    (item.queries.length ? '<p class="journey-live" id="journey-'+key+'">高德查询 · '+esc(checkText(key))+'</p>' : '')+
+    '</div>';
+}
+
+function timeline(i){
+  const day = days[i];
+  const pins = pinPoints(i);
+  return  '<div class="intro"><h2>'+esc(day.title)+'</h2><p class="muted">'+esc(day.pace)+'</p><p class="muted">下方按高德返回方案比较距离。地铁只比较全程地铁加步行的方案。打开 App 后，以手机端的可用路线和偏好设置为准。</p></div>'+
+    '<section class="notice"><strong>当天要卡的时间</strong><p>'+esc(day.alert)+'</p></section><div class="timeline">'+
+    day.points.map((p,n)=>{
+      const marker = pins.find(point=>point.index===n);
+      const links = [
+        ...transportLinks(journeys[i][n].queries),
+        marker ? '<button type="button" class="locate" data-point="'+marker.key+'">地图定位 '+marker.number+'</button>' : '',
+        p.xhs ? external('小红书搜索',xhs(p.xhs)) : '',
+        p.source && !p.source[1].startsWith('https://www.amap.com/place/') ? external(p.source[0],p.source[1]) : ''
+      ].filter(Boolean).join('');
+      return '<article id="stop-'+i+'-'+n+'"><div class="meta"><span>'+esc(p.time)+'</span><span class="badge'+(/必打卡|硬时点/.test(p.tag)?' important':'')+'">'+esc(p.tag)+'</span></div>'+
+        '<h3>'+esc(p.name)+'</h3><p>'+esc(p.desc)+'</p>'+(p.detail ? '<p class="details">'+esc(p.detail)+'</p>' : '')+
+        routeSummary(i,n)+(links ? '<div class="actions">'+links+'</div>' : '')+'</article>';
+    }).join('')+'</div>';
+}
+
+function highlight(key){
+  activePoint=key;
+  document.querySelectorAll('article.selected,.pin.selected').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('stop-'+key)?.classList.add('selected');
+  amapMarkers.get(key)?.element.classList.add('selected');
+}
+
+function selectDiagramPoint(dayIndex,key){
+  if(current!==dayIndex) render(dayIndex);
+  highlight(key);
+  document.getElementById('stop-'+key)?.scrollIntoView({block:'nearest'});
+}
+
+function drawDiagram(){
+  const all = groups().flatMap(pinPoints);
+  const west = Math.min(...all.map(p=>p.lng)), east = Math.max(...all.map(p=>p.lng));
+  const south = Math.min(...all.map(p=>p.lat)), north = Math.max(...all.map(p=>p.lat));
+  const compress = current===-1 || current===2;
+  const project = p => {
+    const normal = (p.lng-west)/(east-west || 1);
+    const x = compress ? (normal<.5 ? .28*normal/.5 : .28+.72*(normal-.5)/.5) : normal;
+    return [52+496*x, 45+235*(north-p.lat)/(north-south || 1)];
+  };
+  diagram.innerHTML = groups().map(i=>{
+    const pins = pinPoints(i);
+    const color = days[i].color;
+    const path = pins.map(project).map(pair=>pair.join(',')).join(' ');
+    const displayed = pins.filter((p,j)=>pins.findIndex(other=>other.lat===p.lat && other.lng===p.lng)===j);
+    return '<polyline points="'+path+'" fill="none" stroke="'+color+'" stroke-width="2.3" stroke-dasharray="5 5" opacity=".65"/>'+
+      displayed.map(p=>{
+        const [x,y]=project(p);
+        const active = p.key===activePoint;
+        return '<g role="button" tabindex="0" data-map-key="'+p.key+'" data-map-day="'+i+'" style="cursor:pointer" aria-label="'+esc(p.name)+'">'+
+          '<title>'+esc(p.name)+'</title><circle cx="'+x+'" cy="'+y+'" r="'+(active?14:11)+'" fill="'+color+'" stroke="'+(active?'#d4a049':'#fff')+'" stroke-width="2"/>'+
+          '<text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" fill="white" font-size="11" font-weight="700">'+p.number+'</text></g>';
+      }).join('');
+  }).join('');
+}
+
+function fitRoute(){
+  if(amapMap && amapOverlays.length){
+    amapPopup.close();
+    amapMap.setFitView(amapOverlays,true,[36,36,36,36],15);
+  }else{
+    activePoint=null;
+    drawDiagram();
+  }
+}
+
+function render(index){
+  current=index;
+  activePoint=null;
+  const day = days[index];
+  tabs.innerHTML = ['总览',...days.map(d=>d.tab)].map((name,i)=>
+    '<button type="button" class="tab" data-day="'+(i-1)+'" aria-pressed="'+(i-1===index)+'">'+name+'</button>').join('');
+  mapTitle.textContent = day ? day.tab+' · 路线' : '三日路线';
+  legend.innerHTML = groups().map(i=>'<span><i class="swatch" style="--c:'+days[i].color+'"></i>'+days[i].tab+'</span>').join('');
+  content.style.setProperty('--route',day?.color || '#28765e');
+  content.innerHTML = day ? timeline(index) : overview();
+  drawDiagram();
+  drawAmap();
+  checkDay(index);
+}
+
+function groupByCoord(pins){
+  const byCoord = new Map();
+  for(const point of pins){
+    const key = point.lat+','+point.lng;
+    if(!byCoord.has(key)) byCoord.set(key,[]);
+    byCoord.get(key).push(point);
+  }
+  return byCoord.values();
+}
+
+function popupHtml(stops,dayIndex){
+  return '<div class="popup">'+stops.map(p=>{
+    return '<strong>'+esc(p.number+' · '+p.name)+'</strong>'+esc(p.time)+'<br>'+
+      transportLinks(journeys[dayIndex][p.index].queries).join(' · ')+
+      '<br><button type="button" data-popup-day="'+dayIndex+'" data-popup-key="'+p.key+'">查看时间轴</button>';
+  }).join('<hr>')+'</div>';
+}
+
+function drawAmap(){
+  if(!amapMap) return;
+  if(amapOverlays.length) amapMap.remove(amapOverlays);
+  amapOverlays = [];
+  amapMarkers.clear();
+  for(const i of groups()){
+    const pins = pinPoints(i);
+    const color = days[i].color;
+    amapOverlays.push(new AMap.Polyline({
+      path:pins.map(p=>[p.lng,p.lat]),strokeColor:color,strokeWeight:3,
+      strokeStyle:'dashed',strokeDasharray:[6,7],strokeOpacity:.85
+    }));
+    for(const stops of groupByCoord(pins)){
+      const first = stops[0];
+      const offset = current<0 ? 6*(i-1) : 0;
+      const element = document.createElement('button');
+      element.type = 'button';
+      element.className = 'pin amap-number';
+      element.style.setProperty('--c',color);
+      element.textContent = first.number;
+      element.setAttribute('aria-label',first.name);
+      const position = [first.lng,first.lat];
+      const marker = new AMap.Marker({position,content:element,
+        offset:new AMap.Pixel(-12-offset,-12-offset),title:first.name});
+      const open = () => {
+        amapPopup.setContent('<div class="amap-popup">'+popupHtml(stops,i)+'</div>');
+        amapPopup.open(amapMap,position);
+      };
+      marker.on('click',()=>{
+        if(current===i) highlight(first.key);
+        open();
+      });
+      amapOverlays.push(marker);
+      for(const point of stops) amapMarkers.set(point.key,{element,position,open});
+    }
+  }
+  amapMap.add(amapOverlays);
+  fitRoute();
+}
+
+function checkText(key){
+  return routeChecks.get(key)?.text ||
+    (routeUnavailable ? '暂无法连接，显示行程估算。' : '联网后查询。');
+}
+
+function publishCheck(key,result){
+  routeChecks.set(key,result);
+  const line = document.getElementById('journey-'+key);
+  if(line){
+    line.textContent = '高德查询 · '+result.text;
+    line.dataset.state = result.confirmed ? 'confirmed' : '';
+  }
+}
+
+function getRoutePlugins(){
+  if(!routePlugins){
+    routePlugins = new Promise(resolve=>{
+      const timer = setTimeout(()=>resolve(false),6500);
+      AMap.plugin(['AMap.Walking','AMap.Riding','AMap.Transfer'],()=>{
+        clearTimeout(timer);
+        resolve(true);
+      });
+    }).catch(()=>false);
+  }
+  return routePlugins;
+}
+
+const meters = value => value>=1000 ? (value/1000).toFixed(1)+' 公里' : Math.round(value)+' 米';
+const minutes = value => Math.max(1,Math.round(value/60))+' 分钟';
+const availableNumber = value => value!==undefined && value!==null && value!=='' && Number.isFinite(Number(value));
+
+function shortestOption(options,getDistance,getTime){
+  return options.filter(option=>availableNumber(getTime(option))).sort((a,b)=>{
+    const distance = value=>availableNumber(getDistance(value)) ? Number(getDistance(value)) : Infinity;
+    return (distance(a)-distance(b)) || Number(getTime(a))-Number(getTime(b));
+  })[0];
+}
+
+const isMetro = segment=>['SUBWAY','METRO_RAIL'].includes(segment.transit_mode);
+
+function shortestRailPlan(plans){
+  return shortestOption(plans.filter(({segments=[]})=>segments.some(isMetro) &&
+    segments.every(segment=>segment.transit_mode==='WALK' || isMetro(segment))),
+    plan=>plan.distance,plan=>plan.time);
+}
+
+function formatCheck(result,query){
+  if(query.mode==='metro'){
+    const plan = shortestRailPlan(result.plans || []);
+    if(!plan) return '';
+    const distance = availableNumber(plan.distance) ? meters(Number(plan.distance))+' / ' : '';
+    const walking = availableNumber(plan.walking_distance) ? '（步行 '+meters(Number(plan.walking_distance))+'）' : '';
+    const stations = plan.segments.filter(isMetro).map(segment=>{
+      const {on_station,off_station,lines}=segment.transit || {};
+      const line = lines?.[0]?.name?.split(/[（(]/)[0];
+      return line && on_station?.name && off_station?.name ? line+' '+on_station.name+'→'+off_station.name : '';
+    }).filter(Boolean);
+    return '地铁 '+distance+minutes(Number(plan.time))+walking+
+      (stations.length ? ' · '+stations.join('，换乘') : '');
+  }
+  const options = (result.routes || []).filter(route=>availableNumber(route.distance));
+  const route = shortestOption(options,option=>option.distance,option=>option.time);
+  if(!route) return '';
+  return travelModes[query.mode]+' '+meters(Number(route.distance))+' / '+minutes(Number(route.time));
+}
+
+function requestRoute(Constructor,query,options={}){
+  return new Promise(resolve=>{
+    const timer = setTimeout(()=>resolve(null),6500);
+    const finish = value=>{clearTimeout(timer);resolve(value)};
+    try{
+      const service = new Constructor(options);
+      const location = p => new AMap.LngLat(p.lng,p.lat);
+      service.search(location(query.from),location(query.to),(status,result)=>{
+        finish(status==='complete' ? result : null);
+      });
+    }catch{
+      finish(null);
+    }
+  });
+}
+
+async function queryRoute(query){
+  if(query.mode==='metro'){
+    if(!AMap.Transfer) return '';
+    // Compare the metro-priority and fastest result sets before filtering to subway plus walking.
+    const results = await Promise.all([7,AMap.TransferPolicy?.LEAST_TIME ?? 0].map(policy=>
+      requestRoute(AMap.Transfer,query,{city:'杭州',policy})));
+    return formatCheck({plans:results.flatMap(result=>result?.plans || [])},query);
+  }
+  const Constructor = query.mode==='walk' ? AMap.Walking : AMap.Riding;
+  if(!Constructor) return '';
+  const result = await requestRoute(Constructor,query);
+  return result ? formatCheck(result,query) : '';
+}
+
+async function checkDay(day){
+  if(day<0 || !amapMap || routeUnavailable) return;
+  const jobs = journeys[day].map((item,index)=>({item,key:day+'-'+index}))
+    .filter(({item,key})=>item.queries.length && !routeChecks.has(key));
+  for(const {key} of jobs) publishCheck(key,{text:'查询中…'});
+  if(!jobs.length) return;
+  const ready = await getRoutePlugins();
+  for(const {item,key} of jobs){
+    const results = ready ? await Promise.all(item.queries.map(queryRoute)) : [];
+    const found = results.filter(Boolean);
+    if(found.length){
+      const suffix = found.length<item.queries.length ? ' · 其余路段见估算' : '';
+      publishCheck(key,{confirmed:true,text:found.join(' · ')+suffix});
+    }else{
+      const text = item.queries.some(query=>query.mode==='metro') ?
+        '暂未返回全程地铁加步行的方案，显示行程估算。' :
+        '暂未返回该段路程，显示行程估算。';
+      publishCheck(key,{text});
+    }
+  }
+}
+
+function loadAmap(){
+  if(window.AMap?.Map) return Promise.resolve();
+  window._AMapSecurityConfig = {securityJsCode:'1ca679becb34641a317071daff00501b'};
+  return new Promise((resolve,reject)=>{
+    const script = document.createElement('script');
+    const timeout = setTimeout(()=>fail(),10000);
+    function fail(){
+      clearTimeout(timeout);
+      script.remove();
+      reject(new Error('AMap SDK unavailable'));
+    }
+    script.onload = ()=>{
+      if(!window.AMap?.Map){
+        fail();
+        return;
+      }
+      clearTimeout(timeout);
+      resolve();
+    };
+    script.onerror = fail;
+    script.src = 'https://webapi.amap.com/maps?v=2.0&key=505f37cbdb2cbed63ac0325e6b076857';
+    document.head.append(script);
+  });
+}
+
+async function startMap(){
+  try{
+    await loadAmap();
+    amapNode.hidden=false;
+    diagram.hidden=true;
+    amapMap = new AMap.Map(amapNode,{center:[120.14,30.25],zoom:12,viewMode:'2D'});
+    amapPopup = new AMap.InfoWindow({isCustom:true,offset:new AMap.Pixel(0,-20)});
+    drawAmap();
+    if(activePoint) highlight(activePoint);
+    mapStatus.textContent='高德地图。'+routeHint;
+    checkDay(current);
+  }catch{
+    amapMap?.destroy();
+    amapMap=undefined;
+    routeUnavailable=true;
+    amapMarkers.clear();
+    amapNode.hidden=true;
+    diagram.hidden=false;
+    drawDiagram();
+    mapStatus.textContent='高德地图暂未加载，当前显示点位示意图。可联网刷新，或用时间轴里的高德导航。';
+    if(current>=0) journeys[current].forEach((item,index)=>{
+      if(item.queries.length) publishCheck(current+'-'+index,{text:'暂无法连接，显示行程估算。'});
+    });
+
+  }
+}
+
+tabs.addEventListener('click',e=>{
+  const tab = e.target.closest('[data-day]');
+  if(!tab) return;
+  render(Number(tab.dataset.day));
+  tabs.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+});
+content.addEventListener('click',e=>{
+  const dayButton = e.target.closest('[data-day]');
+  if(dayButton){
+    render(Number(dayButton.dataset.day));
+    tabs.querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+    content.scrollIntoView({block:'nearest'});
+    return;
+  }
+  const locate = e.target.closest('[data-point]');
+  if(!locate) return;
+  const key = locate.dataset.point;
+  highlight(key);
+  const pin = amapMarkers.get(key);
+  if(pin){
+    amapMap.setZoomAndCenter(Math.max(amapMap.getZoom(),15),pin.position);
+    pin.open();
+  }else drawDiagram();
+  if(matchMedia('(max-width:850px)').matches) mapPanel.scrollIntoView({block:'start',behavior:'smooth'});
+});
+function onPopupClick(e){
+  const button = e.target.closest('[data-popup-key]');
+  if(!button) return;
+  const {popupDay,popupKey}=button.dataset;
+  if(current!==Number(popupDay))render(Number(popupDay));
+  highlight(popupKey);
+  document.getElementById('stop-'+popupKey)?.scrollIntoView({block:'center',behavior:'smooth'});
+}
+amapNode.addEventListener('click',onPopupClick);
+function activateDiagram(e){
+  const target = e.target.closest('[data-map-key]');
+  if(!target) return;
+  e.preventDefault();
+  selectDiagramPoint(Number(target.dataset.mapDay),target.dataset.mapKey);
+  drawDiagram();
+}
+diagram.addEventListener('click',activateDiagram);
+diagram.addEventListener('keydown',e=>{
+  if(e.key==='Enter' || e.key===' ') activateDiagram(e);
+});
+document.getElementById('fit').addEventListener('click',fitRoute);
+document.getElementById('xhs-topics').innerHTML = '小红书站内搜索 · '+topics.map(([text,query])=>external(text,xhs(query))).join('、');
+render(-1);
+startMap();
+</script>
+</body>
+</html>
